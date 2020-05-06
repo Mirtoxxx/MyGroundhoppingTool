@@ -6,6 +6,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -13,11 +14,12 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 
 public class GameForm extends FormLayout {
-    private ListView listView;
-    private BackendService service = BackendService.getInstance();
+
+    private BackendService service;
+
 
     private TextField stadium = new TextField("Stadium");
-    private TextField date = new TextField("Date");
+    private DatePicker date = new DatePicker("Date");
     private TextField homeTeam = new TextField("Home Team");
     private TextField awayTeam = new TextField("Away Team");
     private TextField score = new TextField("Score");
@@ -28,8 +30,7 @@ public class GameForm extends FormLayout {
 
     Binder<Game> binder = new BeanValidationBinder<>(Game.class);
 
-    public GameForm(ListView listView){
-        this.listView = listView;
+    public GameForm(){
         binder.bindInstanceFields(this);
 
 
@@ -52,13 +53,7 @@ public class GameForm extends FormLayout {
         save.addClickShortcut(Key.ENTER);
         cancel.addClickShortcut(Key.ESCAPE);
 
-        save.addClickListener(click -> save());
-        delete.addClickListener(event -> delete());
-        cancel.addClickListener(click -> {
-            setGame(null);
-            this.setVisible(false);
-        });
-
+        //save.addClickListener(click -> save());
 
         HorizontalLayout buttons = new HorizontalLayout();
 
@@ -67,21 +62,55 @@ public class GameForm extends FormLayout {
         return buttons;
     }
 
-    private void save(){
+    private void save() {
         Game game = binder.getBean();
         service.save(game);
-        listView.updateGrid();
+
         setGame(null);
     }
-
-    private void delete(){
-        Game game = binder.getBean();
-        service.delete(game);
-        listView.updateGrid();
-        setGame(null);
-    }
-
-
 
 
 }
+    /*Events
+    public static abstract class GameFormEvent extends ComponentEvent<GameForm> {
+      private Game game;
+
+        protected GameFormEvent(GameForm source, Game game) {
+
+
+            super(source, false);
+            this.game = game;
+    }
+
+        public Game getGame() {
+            return game;
+    }
+}
+
+    public static class SaveEvent extends GameFormEvent {
+        SaveEvent(GameForm source, Game game) {
+            super(source, game);
+    }
+}
+
+    public static class DeleteEvent extends GameFormEvent {
+        DeleteEvent(GameForm source, Game game) {
+            super(source, game);
+    }
+
+}
+
+    public static class CloseEvent extends GameFormEvent {
+        CloseEvent(GameForm source) {
+            super(source, null);
+    }
+}
+
+    public <T extends ComponentEvent<?>> Registration addListener(Class<T> eventType,
+                                                                  ComponentEventListener<T> listener) {
+
+
+        return getEventBus().addListener(eventType, listener);
+    }
+}
+*/

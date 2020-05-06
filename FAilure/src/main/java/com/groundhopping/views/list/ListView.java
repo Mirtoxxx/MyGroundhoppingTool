@@ -7,45 +7,38 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-@Route(value = "list", layout = MainView.class)
-@RouteAlias(value = "", layout = MainView.class)
+@Component
+@Scope("prototype")
+@Route(value = "", layout = MainView.class)
 @PageTitle("List")
 
 public class ListView extends VerticalLayout {
 
-    private BackendService service = BackendService.getInstance();
-    TextField filter = new TextField();
-    Grid<Game> games = new Grid<>(Game.class);
+    BackendService service;
     GameForm form;
+    Grid<Game> games = new Grid<>(Game.class);
 
-    public ListView() {
+
+    public ListView(BackendService service) {
+        this.service = service;
         setSizeFull();
         configureGrid();
         updateGrid();
         configureForm();
-
-        // get a toolbar with Filter and "add" button
-
-        filter.setPlaceholder("Filter the games");
-        filter.setClearButtonVisible(true);
-        filter.setValueChangeMode(ValueChangeMode.LAZY);
-        filter.addValueChangeListener(e -> updateGrid());
-
+        // get a toolbar
         Button addGame = new Button("Add new Game");
         addGame.addClickListener(click -> {
             games.asSingleSelect().clear();
             form.setGame(new Game());
-            form.setVisible(true);
         });
 
-        HorizontalLayout toolbar = new HorizontalLayout(filter, addGame);
-
+        HorizontalLayout toolbar = new HorizontalLayout(addGame);
+        toolbar.setSizeFull();
 
 //Fill content of the "list" page
         HorizontalLayout content = new HorizontalLayout(games, form);
@@ -57,11 +50,11 @@ public class ListView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new GameForm(this);
+        form = new GameForm();
     }
 
     public void updateGrid() {
-        games.setItems(service.findAll(filter.getValue()));
+        games.setItems(service.findAll());
     }
 
     private void configureGrid() {

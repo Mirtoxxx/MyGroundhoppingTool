@@ -1,18 +1,18 @@
 package com.groundhopping.backend;
 
+import javax.persistence.Entity;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+import java.time.LocalDate;
 
-public class Game implements Cloneable, Serializable {
+@Entity
+public class Game extends AbstractEntity implements Cloneable{
 
     @NotNull
     @NotEmpty
     private String stadium;
 
-    private Long id;
-
-    private String date;
+    private LocalDate date;
     @NotNull
     @NotEmpty
     private String homeTeam;
@@ -22,26 +22,6 @@ public class Game implements Cloneable, Serializable {
     @NotNull
     @NotEmpty
     private String score;
-    private String notes = "";
-
-    public Game(String stadium, String date, String homeTeam, String awayTeam, String score) {
-
-        setStadium(stadium);
-        setDate(date);
-        setAwayTeam(awayTeam);
-        setHomeTeam(homeTeam);
-        setScore(score);
-    }
-
-    public Game() {
-
-    }
-    public Long getId(){
-        return id;
-    }
-    public void setId(Long id){
-        this.id = id;
-    }
 
     public String getStadium() {
         return stadium;
@@ -51,11 +31,11 @@ public class Game implements Cloneable, Serializable {
         this.stadium = stadium;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -75,13 +55,6 @@ public class Game implements Cloneable, Serializable {
         this.awayTeam = awayTeam;
     }
 
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
 
     public String getScore(){
         return score;
@@ -89,16 +62,6 @@ public class Game implements Cloneable, Serializable {
 
     public void setScore(String score){
         this.score = score;
-    }
-
-
-    @Override
-    public Game clone() throws CloneNotSupportedException{
-        return (Game) super.clone();
-    }
-    @Override
-    public String toString(){
-        return stadium + homeTeam + awayTeam;
     }
 
 }
