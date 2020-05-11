@@ -1,6 +1,7 @@
 package com.groundhopping.views.main;
 
 import com.groundhopping.views.list.ListView;
+import com.groundhopping.views.stats.StatsView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -46,6 +47,7 @@ public class MainView extends AppLayout {
     private static Tab[] getAvailableTabs() {
         final List<Tab> tabs = new ArrayList<>();
         tabs.add(createTab("List", ListView.class));
+        tabs.add(createTab("Stats", StatsView.class));
         return tabs.toArray(new Tab[tabs.size()]);
     }
 
