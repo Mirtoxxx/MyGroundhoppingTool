@@ -24,6 +24,7 @@ public class Game implements Cloneable, Serializable {
     private String score;
     private String notes = "";
 
+
     public Game(String stadium, String date, String homeTeam, String awayTeam, String score) {
 
         setStadium(stadium);
@@ -100,5 +101,6 @@ public class Game implements Cloneable, Serializable {
     public String toString(){
         return stadium + homeTeam + awayTeam;
     }
+
 
 }

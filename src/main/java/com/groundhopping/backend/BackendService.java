@@ -1,7 +1,6 @@
 package com.groundhopping.backend;
 
-import com.vaadin.flow.data.provider.DataProvider;
-import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.component.notification.Notification;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,6 +20,7 @@ public class BackendService {
         save(new Game("Bieberer Berg", "04.05.2012", "Offenbach FC", "Borussia Mönchengladbach", "1:7"));
         save(new Game("Borussia Park", "22.02.2020", "Borussia Mönchengladbach", "TSG 1899 Hoffenheim", "1:1"));
         save(new Game("Allianz Arena", "05.11.2005", "FC Bayern München", "SV Werder Bremen", "3:1"));
+        save(new Game("Borussia Park", "25.10.2012", "Borussia Mönchengladbach", "Olympique Marseille", "2:0"));
     }
 
 
@@ -80,11 +80,23 @@ public class BackendService {
         }
         games.put(entry.getId(), entry);
     }
+    public Map<String,Integer> getStats(){
+        Map<String, Integer> gameCount = new HashMap<>();
 
-    public DataProvider getStats() {
-        DataProvider<Game, ?> series = new ListDataProvider<>(findAll());
+        findAll().forEach(game -> {
 
-        return series;
+            if (gameCount.containsKey(game.getStadium())) {
+                gameCount.replace(game.getStadium(), gameCount.get(game.getStadium()) + 1);
+            }
+            else if (!gameCount.containsKey(game.getStadium())){
+                gameCount.put(game.getStadium(), 1);
+            }
+            else {
+                new Notification("Error");
+            }
+        });
+        return gameCount;
     }
+
 }
 
